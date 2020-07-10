@@ -31,7 +31,7 @@ const Users = () => {
 
   const { fetching, data } = useSelector(state => state.user)
 
-  const [pageSize, setPageSize] = useState(5);
+  const [pageSize, setPageSize] = useState(10);
 
   const queryPage = useLocation().search.match(/page=([0-9]+)/, '')
 
@@ -73,7 +73,7 @@ const Users = () => {
                   striped
                   itemsPerPageSelect={{
                     label: "Item/ 1 Page",
-                    values: [5, 10, 20, 50, 100, 200, 500]
+                    values: [10, 20, 50, 100, 200, 500]
                   }}
                   itemsPerPage={pageSize}
                   onPaginationChange={paginationChange}
