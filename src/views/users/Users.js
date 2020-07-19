@@ -64,7 +64,6 @@ const Users = () => {
             </CCardHeader>
             <CCardBody>
               <Skeleton loading={!data} >
-                <RangePicker />
                 <CDataTable
                   items={data?.sources}
                   fields={[
