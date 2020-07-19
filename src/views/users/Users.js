@@ -13,6 +13,7 @@ import {
 } from '@coreui/react'
 
 import { Spin, Skeleton } from 'antd'
+
 import { format } from 'date-fns'
 
 import { fetchUsers } from '../../redux/userRedux/actions'
@@ -63,6 +64,7 @@ const Users = () => {
             </CCardHeader>
             <CCardBody>
               <Skeleton loading={!data} >
+                <RangePicker />
                 <CDataTable
                   items={data?.sources}
                   fields={[
