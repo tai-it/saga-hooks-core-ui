@@ -2,7 +2,6 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import {
-  CBadge,
   CCard,
   CCardBody,
   CCardHeader,
@@ -15,50 +14,37 @@ import {
 import { Spin, Skeleton, DatePicker } from "antd";
 import { format } from "date-fns";
 
-import { fetchUsers } from "../../redux/userRedux/actions";
+import { fetchStations } from "../../redux/stationRedux/actions";
 
-const getBadge = (status) => {
-  switch (status) {
-    case true:
-      return "success";
-    default:
-      return "danger";
-  }
-};
+const Stations = () => {
+  const dispatch = useDispatch()
+  const history = useHistory()
+  const { RangePicker } = DatePicker
+  const { fetching, data } = useSelector((state) => state.station)
 
-const { RangePicker } = DatePicker;
+  const [pageSize, setPageSize] = useState(10)
 
-const Users = () => {
+  const queryPage = useLocation().search.match(/page=([0-9]+)/, "")
 
-  const dispatch = useDispatch();
+  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
 
-  const history = useHistory();
-
-  const { fetching, data } = useSelector((state) => state.user);
-
-  const [pageSize, setPageSize] = useState(10);
-
-  const queryPage = useLocation().search.match(/page=([0-9]+)/, "");
-
-  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1);
-
-  const [page, setPage] = useState(currentPage);
+  const [page, setPage] = useState(currentPage)
 
   const pageChange = (newPage) => {
     if (newPage) {
-      currentPage !== newPage && history.push(`/users?page=${newPage}`);
+      currentPage !== newPage && history.push(`/stations?page=${newPage}`)
     }
-  };
+  }
 
   const onChange = (e) => {
     if (e) {
       const fromDate = new Date(e[0]);
       const toDate = new Date(e[1]);
-      dispatch(fetchUsers({ pageIndex: page, pageSize, fromDate: formatDateTime(fromDate), toDate: formatDateTime(toDate) }));
+      dispatch(fetchStations({ pageIndex: page, pageSize, fromDate: formatDateTime(fromDate), toDate: formatDateTime(toDate) }));
     } else {
-      dispatch(fetchUsers({ pageIndex: page, pageSize }));
+      dispatch(fetchStations({ pageIndex: page, pageSize }));
     }
-  };
+  }
 
   const formatDateTime = (date) => {
     const theTime = new Date(date);
@@ -66,17 +52,17 @@ const Users = () => {
     const month = theTime.getMonth() + 1;
     const year = theTime.getFullYear();
     return `${("0" + month).slice(-2)}-${("0" + day).slice(-2)}-${year}`;
-  };
+  }
 
   const paginationChange = (pageSize) => {
     setPageSize(pageSize);
-    dispatch(fetchUsers({ pageIndex: page, pageSize }));
-  };
+    dispatch(fetchStations({ pageIndex: page, pageSize }));
+  }
 
   useEffect(() => {
     currentPage !== page && setPage(currentPage);
-    dispatch(fetchUsers({ pageIndex: page, pageSize }));
-  }, [currentPage, pageSize, page, dispatch, history]);
+    dispatch(fetchStations({ pageIndex: page, pageSize }));
+  }, [currentPage, pageSize, page, dispatch, history])
 
   return (
     <CRow>
@@ -85,13 +71,12 @@ const Users = () => {
           <CCard>
             <CCardHeader>
               <CRow>
-                <CCol lg="6">User</CCol>
+                <CCol lg="6">Stations</CCol>
                 <CCol lg="6">
                   <RangePicker
                     format="DD-MM-YYYY HH:mm"
                     onChange={onChange}
                     activePage={data?.pageIndex}
-                  // onOk={onOk}
                   />
                 </CCol>
               </CRow>
@@ -101,12 +86,12 @@ const Users = () => {
                 <CDataTable
                   items={data?.sources}
                   fields={[
-                    { key: "name", _classes: "font-weight-bold" },
-                    "email",
-                    "phoneNumber",
-                    "roles",
-                    "createdOn",
-                    "isActive",
+                    { key: "stationName", _classes: "font-weight-bold" },
+                    "stationOwner",
+                    "totalOrder",
+                    "totalService",
+                    "totalRevenue",
+                    "createdOn"
                   ]}
                   hover
                   striped
@@ -123,16 +108,8 @@ const Users = () => {
                     placeholder: "Type anything to search",
                   }}
                   columnFilter
-                  onRowClick={(item) => history.push(`/users/${item.id}`)}
+                  onRowClick={(item) => history.push(`/stations/${item.id}`)}
                   scopedSlots={{
-                    email: (item) => <td>{item.email || ""}</td>,
-                    isActive: (item) => (
-                      <td>
-                        <CBadge color={getBadge(item.isActive)}>
-                          {item.isActive ? "active" : "banned"}
-                        </CBadge>
-                      </td>
-                    ),
                     createdOn: (item) => (
                       <td>
                         {format(new Date(item.createdOn), "dd-MM-yyyy H:mm")}
@@ -140,18 +117,13 @@ const Users = () => {
                     ),
                   }}
                 />
-                <CRow>
-                  <CCol lg="9">
-                  </CCol>
-                  <CCol lg="3">
-                    <CPagination
-                      activePage={data?.pageIndex}
-                      onActivePageChange={pageChange}
-                      pages={data?.totalPages}
-                      doubleArrows
-                    />
-                  </CCol>
-                </CRow>
+                <CPagination
+                  activePage={data?.pageIndex}
+                  onActivePageChange={pageChange}
+                  pages={data?.totalPages}
+                  doubleArrows
+                  align="center"
+                />
               </Skeleton>
             </CCardBody>
           </CCard>
@@ -161,4 +133,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Stations;

@@ -13,6 +13,7 @@ export default [
     _tag: 'CSidebarNavTitle',
     _children: ['Data Management']
   },
+  // User
   {
     _tag: 'CSidebarNavDropdown',
     name: 'Users',
@@ -26,51 +27,19 @@ export default [
       }
     ],
   },
-  {
-    _tag: 'CSidebarNavTitle',
-    _children: ['Components']
-  },
+  // Station
   {
     _tag: 'CSidebarNavDropdown',
-    name: 'Base',
-    route: '/base',
-    icon: 'cil-puzzle',
+    name: 'Stations',
+    route: '/stations',
+    icon: 'cil-settings',
     _children: [
       {
         _tag: 'CSidebarNavItem',
-        name: 'Forms',
-        to: '/base/forms',
-      },
-      {
-        _tag: 'CSidebarNavItem',
-        name: 'Switches',
-        to: '/base/switches',
-      },
-    ],
-  },
-  {
-    _tag: 'CSidebarNavItem',
-    name: 'Charts',
-    to: '/charts',
-    icon: 'cil-chart-pie'
-  },
-  {
-    _tag: 'CSidebarNavDropdown',
-    name: 'Notifications',
-    route: '/notifications',
-    icon: 'cil-bell',
-    _children: [
-      {
-        _tag: 'CSidebarNavItem',
-        name: 'Alerts',
-        to: '/notifications/alerts',
-      },
-      {
-        _tag: 'CSidebarNavItem',
-        name: 'Toaster',
-        to: '/notifications/toaster'
+        name: 'Manage Stations',
+        to: '/stations',
       }
-    ]
+    ],
   }
 ]
 
