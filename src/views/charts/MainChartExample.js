@@ -90,19 +90,19 @@ const MainChartExample = attributes => {
   useEffect(() => {
     const fetchOrders = async () => {
       const token = localStorage.getItem("_token")
-      const response = await callApi(`dashboard/orders?pageSize=1000&fromDate=${format(startDate, "MM-dd-yyyy")}`, "GET", null, token)
+      const response = await callApi(`dashboard/orders?limit=1000&fromDate=${format(startDate, "MM-dd-yyyy")}`, "GET", null, token)
       const orders = response.data.sources
       getAndSetOrderData(orders)
     }
     const fetchUsers = async () => {
       const token = localStorage.getItem("_token")
-      const response = await callApi(`dashboard/users?pageSize=1000&fromDate=${format(startDate, "MM-dd-yyyy")}`, "GET", null, token)
+      const response = await callApi(`dashboard/users?limit=1000&fromDate=${format(startDate, "MM-dd-yyyy")}`, "GET", null, token)
       const users = response.data.sources
       getAndSetUserData(users)
     }
     const fetchStations = async () => {
       const token = localStorage.getItem("_token")
-      const response = await callApi(`dashboard/stations?pageSize=1000&fromDate=${format(startDate, "MM-dd-yyyy")}`, "GET", null, token)
+      const response = await callApi(`dashboard/stations?limit=1000&fromDate=${format(startDate, "MM-dd-yyyy")}`, "GET", null, token)
       const stations = response.data.sources
       getAndSetStationData(stations)
       setLoading(false)
