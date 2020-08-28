@@ -19,6 +19,5 @@ export const callApi = (
     };
     return axios(configs);
   } catch (e) {
-    console.log(e);
   }
 };

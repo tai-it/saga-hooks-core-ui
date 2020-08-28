@@ -17,34 +17,41 @@ import { format } from "date-fns";
 import { fetchStations } from "../../redux/stationRedux/actions";
 
 const Stations = () => {
-  const dispatch = useDispatch()
-  const history = useHistory()
-  const { RangePicker } = DatePicker
-  const { fetching, data } = useSelector((state) => state.station)
+  const dispatch = useDispatch();
+  const history = useHistory();
+  const { RangePicker } = DatePicker;
+  const { fetching, data } = useSelector((state) => state.station);
 
-  const [pageSize, setPageSize] = useState(10)
+  const [pageSize, setPageSize] = useState(10);
 
-  const queryPage = useLocation().search.match(/page=([0-9]+)/, "")
+  const queryPage = useLocation().search.match(/page=([0-9]+)/, "");
 
-  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1)
+  const currentPage = Number(queryPage && queryPage[1] ? queryPage[1] : 1);
 
-  const [page, setPage] = useState(currentPage)
+  const [page, setPage] = useState(currentPage);
 
   const pageChange = (newPage) => {
     if (newPage) {
-      currentPage !== newPage && history.push(`/stations?page=${newPage}`)
+      currentPage !== newPage && history.push(`/stations?page=${newPage}`);
     }
-  }
+  };
 
   const onChange = (e) => {
     if (e) {
       const fromDate = new Date(e[0]);
       const toDate = new Date(e[1]);
-      dispatch(fetchStations({ pageIndex: page, pageSize, fromDate: formatDateTime(fromDate), toDate: formatDateTime(toDate) }));
+      dispatch(
+        fetchStations({
+          pageIndex: page,
+          pageSize,
+          fromDate: formatDateTime(fromDate),
+          toDate: formatDateTime(toDate),
+        })
+      );
     } else {
       dispatch(fetchStations({ pageIndex: page, pageSize }));
     }
-  }
+  };
 
   const formatDateTime = (date) => {
     const theTime = new Date(date);
@@ -52,17 +59,17 @@ const Stations = () => {
     const month = theTime.getMonth() + 1;
     const year = theTime.getFullYear();
     return `${("0" + month).slice(-2)}-${("0" + day).slice(-2)}-${year}`;
-  }
+  };
 
   const paginationChange = (pageSize) => {
     setPageSize(pageSize);
     dispatch(fetchStations({ pageIndex: page, pageSize }));
-  }
+  };
 
   useEffect(() => {
     currentPage !== page && setPage(currentPage);
     dispatch(fetchStations({ pageIndex: page, pageSize }));
-  }, [currentPage, pageSize, page, dispatch, history])
+  }, [currentPage, pageSize, page, dispatch, history]);
 
   return (
     <CRow>
@@ -71,8 +78,8 @@ const Stations = () => {
           <CCard>
             <CCardHeader>
               <CRow>
-                <CCol lg="6">Stations</CCol>
-                <CCol lg="6">
+                <CCol lg="9">Stations</CCol>
+                <CCol lg="3">
                   <RangePicker
                     format="DD-MM-YYYY HH:mm"
                     onChange={onChange}
@@ -91,7 +98,7 @@ const Stations = () => {
                     "totalOrder",
                     "totalService",
                     "totalRevenue",
-                    "createdOn"
+                    "createdOn",
                   ]}
                   hover
                   striped
@@ -117,13 +124,17 @@ const Stations = () => {
                     ),
                   }}
                 />
-                <CPagination
-                  activePage={data?.pageIndex}
-                  onActivePageChange={pageChange}
-                  pages={data?.totalPages}
-                  doubleArrows
-                  align="center"
-                />
+                <CRow>
+                  <CCol lg="9">Tổng : {data?.totalCount}</CCol>
+                  <CCol lg="3">
+                    <CPagination
+                      activePage={data?.pageIndex}
+                      onActivePageChange={pageChange}
+                      pages={data?.totalPages}
+                      doubleArrows
+                    />
+                  </CCol>
+                </CRow>
               </Skeleton>
             </CCardBody>
           </CCard>

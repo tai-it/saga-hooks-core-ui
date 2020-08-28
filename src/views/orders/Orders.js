@@ -2,38 +2,26 @@ import React, { useState, useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { useHistory, useLocation } from "react-router-dom";
 import {
-  CBadge,
   CCard,
   CCardBody,
   CCardHeader,
   CCol,
   CDataTable,
   CRow,
-  CPagination
+  CPagination,
 } from "@coreui/react";
 
 import { Spin, Skeleton, DatePicker } from "antd";
 import { format } from "date-fns";
 
-import { fetchUsers } from "../../redux/userRedux/actions";
+import { fetchOrders } from "../../redux/orderRedux/actions";
 
-const getBadge = (status) => {
-  switch (status) {
-    case true:
-      return "success";
-    default:
-      return "danger";
-  }
-};
-
-const { RangePicker } = DatePicker;
-
-const Users = () => {
+const Orders = () => {
   const dispatch = useDispatch();
-
   const history = useHistory();
+  const { RangePicker } = DatePicker;
 
-  const { fetching, data } = useSelector((state) => state.user);
+  const { fetching, data } = useSelector((state) => state.order);
 
   const [pageSize, setPageSize] = useState(10);
 
@@ -45,7 +33,7 @@ const Users = () => {
 
   const pageChange = (newPage) => {
     if (newPage) {
-      currentPage !== newPage && history.push(`/users?page=${newPage}`);
+      currentPage !== newPage && history.push(`/orders?page=${newPage}`);
     }
   };
 
@@ -54,7 +42,7 @@ const Users = () => {
       const fromDate = new Date(e[0]);
       const toDate = new Date(e[1]);
       dispatch(
-        fetchUsers({
+        fetchOrders({
           pageIndex: page,
           pageSize,
           fromDate: formatDateTime(fromDate),
@@ -62,7 +50,7 @@ const Users = () => {
         })
       );
     } else {
-      dispatch(fetchUsers({ pageIndex: page, pageSize }));
+      dispatch(fetchOrders({ pageIndex: page, pageSize }));
     }
   };
 
@@ -76,12 +64,12 @@ const Users = () => {
 
   const paginationChange = (pageSize) => {
     setPageSize(pageSize);
-    dispatch(fetchUsers({ pageIndex: page, pageSize }));
+    dispatch(fetchOrders({ pageIndex: page, pageSize }));
   };
 
   useEffect(() => {
     currentPage !== page && setPage(currentPage);
-    dispatch(fetchUsers({ pageIndex: page, pageSize }));
+    dispatch(fetchOrders({ pageIndex: page, pageSize }));
   }, [currentPage, pageSize, page, dispatch, history]);
 
   return (
@@ -91,7 +79,7 @@ const Users = () => {
           <CCard>
             <CCardHeader>
               <CRow>
-                <CCol lg="9">Users</CCol>
+                <CCol lg="9">Orders</CCol>
                 <CCol lg="3">
                   <RangePicker
                     format="DD-MM-YYYY HH:mm"
@@ -106,12 +94,11 @@ const Users = () => {
                 <CDataTable
                   items={data?.sources}
                   fields={[
-                    { key: "name", _classes: "font-weight-bold" },
-                    "email",
-                    "phoneNumber",
-                    "roles",
+                    { key: "customerName", _classes: "font-weight-bold" },
+                    "customerPhone",
+                    "totalPrice",
+                    "status",
                     "createdOn",
-                    "isActive",
                   ]}
                   hover
                   striped
@@ -128,16 +115,8 @@ const Users = () => {
                     placeholder: "Type anything to search",
                   }}
                   columnFilter
-                  onRowClick={(item) => history.push(`/users/${item.id}`)}
+                  onRowClick={(item) => history.push(`/orders/${item.id}`)}
                   scopedSlots={{
-                    email: (item) => <td>{item.email || ""}</td>,
-                    isActive: (item) => (
-                      <td>
-                        <CBadge color={getBadge(item.isActive)}>
-                          {item.isActive ? "active" : "banned"}
-                        </CBadge>
-                      </td>
-                    ),
                     createdOn: (item) => (
                       <td>
                         {format(new Date(item.createdOn), "dd-MM-yyyy H:mm")}
@@ -145,7 +124,6 @@ const Users = () => {
                     ),
                   }}
                 />
-
                 <CRow>
                   <CCol lg="9">Tổng : {data?.totalCount}</CCol>
                   <CCol lg="3">
@@ -166,4 +144,4 @@ const Users = () => {
   );
 };
 
-export default Users;
+export default Orders;

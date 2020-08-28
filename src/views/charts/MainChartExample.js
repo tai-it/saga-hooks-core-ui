@@ -42,7 +42,6 @@ const MainChartExample = attributes => {
       const response = await callApi(`dashboard/chart?chartType=${chartType || "Range"}&fromDate=${fromDate}&toDate=${toDate}`, "GET", null, token)
       setChartData(response.data.data)
     } catch (error) {
-      console.log("fetchChartData -> error", error)
     }
     setLoading(false)
   }
@@ -118,9 +117,9 @@ const MainChartExample = attributes => {
 
   // render
   return (
-    <CCard>
+    <CCard  className="traffic">
       <CCardBody>
-        <CRow>
+        <CRow className="chart">
           <CCol sm="4">
             <h4 id="traffic" className="card-title mb-0">Traffic</h4>
             <div className="small text-muted">{chartData && `From ${chartData?.fromDate} to ${chartData?.toDate}`}</div>

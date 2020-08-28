@@ -1,8 +1,8 @@
-import React, { lazy } from 'react'
+import React, { lazy } from "react";
 
-import MainChartExample from '../charts/MainChartExample.js'
+import MainChartExample from "../charts/MainChartExample.js";
 
-const WidgetsDropdown = lazy(() => import('../widgets/WidgetsDropdown.js'))
+const WidgetsDropdown = lazy(() => import("../widgets/WidgetsDropdown.js"));
 
 const Dashboard = () => {
   return (
@@ -10,7 +10,7 @@ const Dashboard = () => {
       <WidgetsDropdown />
       <MainChartExample style={{ height: '300px', marginTop: '40px' }} />
     </>
-  )
-}
+  );
+};
 
-export default Dashboard
+export default Dashboard;
